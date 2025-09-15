@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Attendee Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>EventHub</h2>
+                <p>Attendee Portal</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                    <i>🎫</i> Dashboard
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('events')">
+                    <i>🎪</i> Browse Events
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('tickets')">
+                    <i>🎟️</i> My Tickets
+                </a>
+            </nav>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Attendee Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <span id="userName">Attendee</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Dashboard Overview Section -->
+                <div id="dashboardSection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Available Events</h3>
+                            <div class="number" id="totalEvents">0</div>
+                            <div class="change">Events to explore</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>My Tickets</h3>
+                            <div class="number" id="totalTickets">0</div>
+                            <div class="change">Tickets purchased</div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Events</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="recentEvents" class="loading">Loading recent events...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Section -->
+                <div id="eventsSection" style="display: none;">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Browse Events</h2>
+                            <div class="filters">
+                                <input type="text" id="searchInput" placeholder="Search events..." class="search-input">
+                                <select id="categorySelect" class="category-select">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <div id="eventsList" class="loading">Loading events...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets Section -->
+                <div id="ticketsSection" style="display: none;">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">My Tickets</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="ticketsList" class="loading">Loading tickets...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buy Ticket Modal -->
+    <div id="buyTicketModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Buy Ticket</h3>
+                <span class="close" onclick="closeModal('buyTicketModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="eventDetails">
+                    <!-- Event details will be populated here -->
+                </div>
+                <div id="availableTickets">
+                    <!-- Available tickets will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth('attendee');
+            loadAttendeeDashboardData();
+        });
+
+        function showSection(section) {
+            // Update active menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all sections
+            const sections = ['dashboardSection', 'eventsSection', 'ticketsSection'];
+            sections.forEach(sectionId => {
+                document.getElementById(sectionId).style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(`${section}Section`).style.display = 'block';
+            
+            // Load section data
+            switch(section) {
+                case 'dashboard':
+                    loadAttendeeDashboardData();
+                    break;
+                case 'events':
+                    loadEvents();
+                    break;
+                case 'tickets':
+                    loadMyTickets();
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

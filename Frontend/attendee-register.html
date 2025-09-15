@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Attendee Registration</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>Attendee Registration</h1>
+            <p>Join events and buy tickets</p>
+        </div>
+        <div class="register-form">
+            <a href="index.html" class="back-link">&larr; Back to Login</a>
+            
+            <div id="registerError" class="error-message"></div>
+            <div id="registerSuccess" class="success-message"></div>
+            
+            <form id="attendeeRegisterForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <input type="hidden" name="role" value="attendee">
+                <button type="submit" class="register-btn" id="registerBtn">Create Attendee Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('attendeeRegisterForm').addEventListener('submit', handleRegister);
+    </script>
+</body>
+</html>

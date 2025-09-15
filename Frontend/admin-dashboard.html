@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Admin Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>EventHub</h2>
+                <p>Admin Portal</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                    <i>📊</i> Dashboard
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('users')">
+                    <i>👥</i> Users
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('events')">
+                    <i>🎪</i> Events
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('tickets')">
+                    <i>🎟️</i> Tickets
+                </a>
+            </nav>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Admin Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <span id="userName">Admin</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Dashboard Overview Section -->
+                <div id="dashboardSection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Events</h3>
+                            <div class="number" id="totalEvents">0</div>
+                            <div class="change">Platform events</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Attendees</h3>
+                            <div class="number" id="totalAttendees">0</div>
+                            <div class="change">Registered attendees</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Organizers</h3>
+                            <div class="number" id="totalOrganizers">0</div>
+                            <div class="change">Event organizers</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Tickets</h3>
+                            <div class="number" id="totalTickets">0</div>
+                            <div class="change">Total tickets created</div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Events</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="recentEvents" class="loading">Loading recent events...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Section -->
+                <div id="usersSection" style="display: none;">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">All Users</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="usersList" class="loading">Loading users...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Section -->
+                <div id="eventsSection" style="display: none;">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">All Events</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="eventsList" class="loading">Loading events...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets Section -->
+                <div id="ticketsSection" style="display: none;">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">All Tickets</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="ticketsList" class="loading">Loading tickets...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth('admin');
+            loadAdminDashboardData();
+        });
+
+        function showSection(section) {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const sections = ['dashboardSection', 'usersSection', 'eventsSection', 'ticketsSection'];
+            sections.forEach(sectionId => {
+                document.getElementById(sectionId).style.display = 'none';
+            });
+
+            document.getElementById(`${section}Section`).style.display = 'block';
+
+            switch(section) {
+                case 'dashboard':
+                    loadAdminDashboardData();
+                    break;
+                case 'users':
+                    loadAllUsers();
+                    break;
+                case 'events':
+                    loadAllEvents();
+                    break;
+                case 'tickets':
+                    loadAllTickets();
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

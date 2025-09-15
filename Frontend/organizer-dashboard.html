@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Organizer Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>EventHub</h2>
+                <p>Organizer Portal</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                    <i>📊</i> Dashboard
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('events')">
+                    <i>🎪</i> My Events
+                </a>
+            </nav>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Organizer Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">O</div>
+                    <span id="userName">Organizer</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Dashboard Overview Section -->
+                <div id="dashboardSection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>My Events</h3>
+                            <div class="number" id="totalEvents">0</div>
+                            <div class="change">Events created</div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Events</h2>
+                        </div>
+                        <div class="table-container">
+                            <div id="recentEvents" class="loading">Loading recent events...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Section -->
+                <div id="eventsSection" style="display: none;">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">My Events</h2>
+                            <button class="btn-primary" onclick="showCreateEventModal()">Create New Event</button>
+                        </div>
+                        <div class="table-container">
+                            <div id="eventsList" class="loading">Loading events...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Event</h3>
+                <span class="close" onclick="closeModal('createEventModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="createEventForm">
+                    <div class="form-group">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" id="eventName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventGenre">Genre</label>
+                        <input type="text" id="eventGenre" name="genre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventCategory">Category</label>
+                        <select id="eventCategory" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Music">Music</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Arts">Arts</option>
+                            <option value="Business">Business</option>
+                            <option value="Education">Education</option>
+                            <option value="Health">Health</option>
+                            <option value="Food">Food</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventPrice">Price ($)</label>
+                        <input type="number" id="eventPrice" name="price" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Create Event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Ticket Modal -->
+    <div id="createTicketModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create Ticket for <span id="ticketEventName"></span></h3>
+                <span class="close" onclick="closeModal('createTicketModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="createTicketForm">
+                    <input type="hidden" id="ticketEventId">
+                    <div class="form-group">
+                        <label for="ticketType">Ticket Type</label>
+                        <input type="text" id="ticketType" name="ticketType" placeholder="e.g., VIP, General, Early Bird" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Create Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth('organizer');
+            loadOrganizerDashboardData();
+        });
+
+        document.getElementById('createEventForm').addEventListener('submit', handleCreateEvent);
+        document.getElementById('createTicketForm').addEventListener('submit', handleCreateTicket);
+
+        function showSection(section) {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const sections = ['dashboardSection', 'eventsSection'];
+            sections.forEach(sectionId => {
+                document.getElementById(sectionId).style.display = 'none';
+            });
+            
+            document.getElementById(`${section}Section`).style.display = 'block';
+            
+            switch(section) {
+                case 'dashboard':
+                    loadOrganizerDashboardData();
+                    break;
+                case 'events':
+                    loadMyEvents();
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
